@@ -166,7 +166,7 @@ import { SITE } from '../consts.ts';
       </section>
 
       <footer class="foot container-wide muted small">
-        자체 수집 애널리틱스(비식별) · 에디터 저장은 GitHub 커밋 · docs/analytics-admin.md
+        자체 수집 애널리틱스(비식별) · 에디터 저장은 GitHub 커밋 · SETUP.md 참고
       </footer>
     </main>
 
@@ -323,9 +323,15 @@ import { SITE } from '../consts.ts';
           $('postList').innerHTML = list.map(function (p) {
             var date = (p.slug.match(/^(\d{4}-\d{2}-\d{2})/) || [])[1] || '';
             var badge = p.draft ? '<span class="pbadge draft">초안</span>' : '<span class="pbadge pub">발행</span>';
-            return '<button class="post-item" data-slug="' + esc(p.slug) + '">' + badge + '<span class="p-name">' + esc(p.title || p.slug) + '</span><span class="p-meta">' + date + '</span><span class="p-edit">편집 →</span></button>';
+            var cat = p.tag ? '#' + esc(p.tag) : '<span class="pr-nocat">카테고리 없음</span>';
+            return '<button class="post-row" data-slug="' + esc(p.slug) + '">' +
+              '<div class="pr-body">' +
+                '<div class="pr-titleline">' + badge + '<span class="pr-title">' + esc(p.title || p.slug) + '</span></div>' +
+                '<div class="pr-meta"><span class="pr-cat">' + cat + '</span><span class="pr-dot">·</span><span>' + date + '</span><span class="pr-dot">·</span><span class="pr-file">' + esc(p.slug) + '</span></div>' +
+              '</div>' +
+              '<span class="pr-edit">편집 ✎</span></button>';
           }).join('');
-          document.querySelectorAll('.post-item').forEach(function (b) { b.addEventListener('click', function () { openEditor(b.dataset.slug); }); });
+          document.querySelectorAll('.post-row').forEach(function (b) { b.addEventListener('click', function () { openEditor(b.dataset.slug); }); });
         }
         var _searchT = null;
         $('postSearch').addEventListener('input', function () { var v = this.value; clearTimeout(_searchT); _searchT = setTimeout(function () { renderList(v); }, 150); });
@@ -567,7 +573,9 @@ import { SITE } from '../consts.ts';
       })();
     </script>
 
-    <style>
+    <style is:global>
+      /* admin은 독립 페이지 — JS로 동적 생성되는 요소(글 목록·통계 막대 등)에도
+         스타일이 적용되도록 전역 스타일 사용. (스코프 CSS는 innerHTML 요소에 안 붙음) */
       body { background: var(--bg); }
       [hidden] { display: none !important; }
       .muted { color: var(--text-muted); }
@@ -636,13 +644,20 @@ import { SITE } from '../consts.ts';
       .btn-utility.danger { color: #d33; border-color: color-mix(in srgb, #d33 40%, var(--border)); }
       .btn-utility.danger:hover { background: color-mix(in srgb, #d33 8%, transparent); }
       .small-btn { font-size: 0.9rem; padding: 0.5em 1.1em; }
-      .postlist { padding: 6px; }
-      .post-item { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; border: 0; background: transparent; font: inherit; padding: 13px 12px; border-radius: var(--rounded-md); cursor: pointer; border-bottom: 1px solid var(--border); }
-      .post-item:last-child { border-bottom: none; }
-      .post-item:hover { background: var(--bg); }
-      .p-name { flex: 1; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .p-meta { color: var(--text-faint); font-size: 0.82rem; white-space: nowrap; }
-      .p-edit { color: var(--brand); font-size: 0.88rem; font-weight: 500; white-space: nowrap; }
+      .postlist { padding: 0; overflow: hidden; }
+      .post-row { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; border: 0; background: transparent; font: inherit; padding: 15px 20px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.12s ease; }
+      .post-row:last-child { border-bottom: none; }
+      .post-row:hover { background: var(--bg); }
+      .pr-body { flex: 1; min-width: 0; }
+      .pr-titleline { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+      .pr-title { font-weight: 600; font-size: 1.02rem; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pr-meta { display: flex; align-items: center; gap: 7px; color: var(--text-faint); font-size: 0.82rem; flex-wrap: wrap; }
+      .pr-cat { color: var(--brand); font-weight: 500; }
+      .pr-nocat { color: var(--text-faint); font-weight: 400; }
+      .pr-dot { opacity: 0.5; }
+      .pr-file { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 16em; }
+      .pr-edit { flex-shrink: 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
+      .post-row:hover .pr-edit { color: var(--brand); }
 
       /* 에디터 */
       .editor-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 10px; }

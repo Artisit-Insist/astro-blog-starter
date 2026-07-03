@@ -22,6 +22,7 @@ export async function onRequestGet({ request, env }) {
       files.map(async (f) => {
         let title = f.name;
         let draft = false;
+        let tag = '';
         try {
           const file = await ghFetch(
             env,
@@ -32,10 +33,15 @@ export async function onRequestGet({ request, env }) {
           const tm = fm.match(/^title:\s*(.+)$/m);
           if (tm) title = tm[1].replace(/^['"]|['"]$/g, '').trim();
           draft = /^draft:\s*true/m.test(fm);
+          const gm = fm.match(/^tags:\s*\[([^\]]*)\]/m);
+          if (gm) {
+            const first = (gm[1].split(',')[0] || '').trim().replace(/^['"]|['"]$/g, '');
+            if (first) tag = first;
+          }
         } catch {
           /* 개별 실패는 무시하고 파일명만 */
         }
-        return { slug: f.name, size: f.size, sha: f.sha, title, draft };
+        return { slug: f.name, size: f.size, sha: f.sha, title, draft, tag };
       }),
     );
     return json({ posts });
