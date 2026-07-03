@@ -4,6 +4,18 @@
 
 > 🚀 **바로 시작:** 위의 **`Use this template`** 버튼으로 내 저장소를 만들고, **[SETUP.md](SETUP.md)** 를 따라 하세요. 코드를 몰라도 30~60분이면 배포됩니다.
 
+## 🖼️ 미리보기
+
+| 홈 | 글 (표·다이어그램 지원) |
+|---|---|
+| ![홈 화면](docs/screenshots/home.png) | ![글 화면](docs/screenshots/post.png) |
+
+| 관리자 대시보드 (자체 통계) | 웹 에디터 (실시간 미리보기) |
+|---|---|
+| ![관리자 대시보드](docs/screenshots/admin-dashboard.png) | ![웹 에디터](docs/screenshots/admin-editor.png) |
+
+<sub>※ 위 화면은 예시 데이터입니다. `src/consts.ts`만 바꾸면 내 브랜드로 바뀝니다.</sub>
+
 ## ✨ 기능
 
 - ⚡ **정적 블로그** — 마크다운으로 글쓰기, RSS·사이트맵 자동
