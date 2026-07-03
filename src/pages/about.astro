@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AUTHOR, SERVICE } from '../consts.ts';
+
+// ProfilePage 구조화 데이터로 저자 권위(E-E-A-T) 강화
+const profileLd = {
+  '@type': 'ProfilePage',
+  mainEntity: { '@id': `${Astro.site}#person` },
+};
+---
+
+<BaseLayout
+  title="소개"
+  description={`${AUTHOR.name} — ${AUTHOR.role}. ${AUTHOR.bio}`}
+  jsonLd={[profileLd]}
+>
+  <section class="container about">
+    <div class="head">
+      <img src={AUTHOR.avatar} alt={`${AUTHOR.name} 프로필 사진`} width="120" height="160" />
+      <div>
+        <h1>{AUTHOR.name}</h1>
+        <p class="role">{AUTHOR.role}</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>{AUTHOR.bio}</p>
+
+      <h2>제가 하는 일</h2>
+      <p>
+        <strong>{SERVICE.name}({SERVICE.nameEn})</strong>는 {SERVICE.description}
+      </p>
+      <blockquote>{SERVICE.tagline} {SERVICE.subTagline}</blockquote>
+
+      <h2>이 공간에 대하여</h2>
+      <p>
+        이 블로그를 왜 시작했는지, 어떤 이야기를 나누고 싶은지 적어보세요.
+        (이 문단은 자유롭게 교체하세요.)
+      </p>
+
+      <!-- 아래 내용은 실제 경력·이력으로 채워 주세요 -->
+      <h2>약력</h2>
+      <ul>
+        <li>경력 한 줄</li>
+        <li>(강연/저술/이력 등을 이곳에 추가하세요)</li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding: 2.5rem 0;
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .head img {
+    border-radius: 18px;
+    object-fit: cover;
+    box-shadow: var(--shadow);
+  }
+  .head h1 {
+    margin: 0;
+  }
+  .role {
+    margin: 0.3em 0 0;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+</style>

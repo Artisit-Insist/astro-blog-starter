@@ -1,0 +1,21 @@
+# Cloudflare Pages + Functions + D1 설정
+name = "your-project-name"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "dist"
+
+# D1 데이터베이스 바인딩 (애널리틱스 + 구독자)
+# database_id 는 `npx wrangler d1 create your-db-name` 실행 후 채웁니다. (SETUP.md 3단계)
+[[d1_databases]]
+binding = "DB"
+database_name = "your-db-name"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# 일반 환경변수 (비밀 아님) — 콘텐츠 에디터/이미지 업로드가 커밋할 GitHub 저장소
+[vars]
+GITHUB_REPO = "your-github-username/your-repo"
+GITHUB_BRANCH = "main"
+
+# 참고: 비밀값은 여기 두지 않습니다 (Cloudflare Pages 대시보드 또는 wrangler secret 로 설정).
+#   ADMIN_PASSWORD  → 어드민 로그인·API 인증 (Secret, 필수)
+#   GITHUB_TOKEN    → 콘텐츠 에디터·이미지 업로드의 커밋용 (Secret)
+#   ANALYTICS_SALT  → (선택) 방문자 해시 솔트

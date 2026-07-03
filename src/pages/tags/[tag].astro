@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPublishedPosts, getAllTags } from '../../utils.ts';
+
+export async function getStaticPaths() {
+  const tags = await getAllTags();
+  const posts = await getPublishedPosts();
+  return tags.map(({ tag }) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((p) => p.data.tags.includes(tag)) },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`#${tag}`}
+  description={`'${tag}' 태그가 붙은 글 모음`}
+>
+  <section class="container-wide wrap">
+    <header>
+      <a href="/blog" class="back">← 전체 글</a>
+      <h1>#{tag}</h1>
+      <p>{posts.length}개의 글</p>
+    </header>
+    <div class="grid">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wrap {
+    padding: 2.5rem 0;
+  }
+  .back {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  h1 {
+    margin: 0.4em 0 0.1em;
+    font-size: 2.25rem;
+    letter-spacing: -0.03em;
+  }
+  header p {
+    margin: 0 0 1.8rem;
+    color: var(--text-muted);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.4rem;
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+import { AUTHOR, SERVICE } from '../consts.ts';
+const year = new Date().getFullYear();
+const s = AUTHOR.social;
+const links = [
+  s.email && { label: '이메일', href: `mailto:${s.email}` },
+  s.brunch && { label: '브런치', href: s.brunch },
+  s.instagram && { label: '인스타그램', href: s.instagram },
+  s.youtube && { label: '유튜브', href: s.youtube },
+  s.linkedin && { label: '링크드인', href: s.linkedin },
+].filter(Boolean) as { label: string; href: string }[];
+---
+
+<footer class="site-footer">
+  <div class="container-wide inner">
+    <div>
+      <p class="ft-title">{SERVICE.name} · {AUTHOR.name}</p>
+      <p class="ft-tag">{SERVICE.tagline} {SERVICE.subTagline}</p>
+    </div>
+    <nav class="ft-links" aria-label="푸터 링크">
+      {
+        links.map((l) =>
+          l.href.startsWith('http') ? (
+            <a href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a>
+          ) : (
+            <a href={l.href}>{l.label}</a>
+          ),
+        )
+      }
+      <a href="/rss.xml" target="_blank">RSS</a>
+      <a href="/about">소개</a>
+      <a href="/admin" class="admin-link">관리자</a>
+    </nav>
+  </div>
+  <p class="copy container-wide">© {year} {AUTHOR.name}. All rights reserved.</p>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 96px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    padding: 40px 0 32px;
+  }
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .ft-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+  }
+  .ft-tag {
+    margin: 0.3em 0 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+  .ft-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+  .ft-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  .ft-links a:hover {
+    color: var(--text);
+    text-decoration: underline;
+  }
+  .admin-link {
+    color: var(--text-faint) !important;
+  }
+  .copy {
+    margin: 28px auto 0;
+    color: var(--text-faint);
+    font-size: 0.8rem;
+  }
+</style>

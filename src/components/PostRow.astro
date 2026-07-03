@@ -1,0 +1,92 @@
+---
+import type { Post } from '../utils.ts';
+import { formatDate, readingTime, stickerColor } from '../utils.ts';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const { title, description, pubDate, tags, tldr } = post.data;
+const href = `/blog/${post.id}`;
+const mins = readingTime(post.body);
+---
+
+<article class="row">
+  <a href={href}>
+    <div class="meta">
+      {
+        tags[0] && (
+          <span class="cat">
+            <i class="dot" style={`background:${stickerColor(tags[0])}`} />
+            {tags[0]}
+          </span>
+        )
+      }
+      <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+      <span>· {mins}분</span>
+    </div>
+    <h3>{title}</h3>
+    <p class="desc">{tldr ?? description}</p>
+  </a>
+</article>
+
+<style>
+  .row {
+    border-bottom: 1px solid var(--border);
+  }
+  .row:last-child {
+    border-bottom: none;
+  }
+  .row a {
+    display: block;
+    padding: 22px 4px;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--rounded-md);
+  }
+  .row a:hover {
+    text-decoration: none;
+  }
+  .row a:hover h3 {
+    color: var(--brand);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6em;
+    color: var(--text-faint);
+    font-size: 0.82rem;
+    margin-bottom: 0.45em;
+  }
+  .cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  h3 {
+    margin: 0 0 0.35em;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    transition: color 0.12s ease;
+  }
+  .desc {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

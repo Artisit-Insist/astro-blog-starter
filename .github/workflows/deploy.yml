@@ -1,0 +1,33 @@
+# main 브랜치에 push(웹 에디터 저장 포함)될 때마다 빌드 후 Cloudflare Pages에 배포
+# (선택 기능 — 설정 전까지는 로컬 `npx wrangler pages deploy dist` 수동 배포를 쓰면 됩니다)
+#
+# 필요 시크릿 (GitHub repo → Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN  — Cloudflare 대시보드 → My Profile → API Tokens
+#                           → "Create Token" → "Cloudflare Pages — Edit" 템플릿
+#   CLOUDFLARE_ACCOUNT_ID — `npx wrangler whoami` 로 확인
+#
+# 아래 --project-name 값을 본인 Cloudflare Pages 프로젝트명으로 바꾸세요.
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm install
+      - run: npm run build
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=your-project-name --branch=main

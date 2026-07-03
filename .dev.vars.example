@@ -1,0 +1,9 @@
+# 로컬에서 Functions(어드민 API)까지 테스트할 때만 필요합니다.
+# 이 파일을 복사해 .dev.vars 로 저장한 뒤 값을 채우고,
+#   npm run build && npx wrangler pages dev dist --d1 DB=<your-db-name>
+# 로 실행하면 로컬에서 /admin 실데이터를 확인할 수 있습니다.
+# (.dev.vars 는 .gitignore 처리되어 커밋되지 않습니다.)
+
+ADMIN_PASSWORD=change-me
+GITHUB_TOKEN=your_github_fine_grained_token
+ANALYTICS_SALT=any-random-string

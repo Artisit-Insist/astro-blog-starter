@@ -1,0 +1,70 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Subscribe from '../components/Subscribe.astro';
+import { SITE } from '../consts.ts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  keywords?: string[];
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead {...props} title={props.title ?? SITE.title} />
+  </head>
+  <body>
+    <a href="#main" class="sr-only">본문 바로가기</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Subscribe />
+    <Footer />
+
+    <!-- 방문 수집 비콘 (자체 애널리틱스). 로컬/어드민은 제외. -->
+    <script is:inline>
+      (function () {
+        try {
+          var h = location.hostname;
+          if (h === 'localhost' || h === '127.0.0.1') return;
+          if (location.pathname.indexOf('/admin') === 0) return;
+          var payload = JSON.stringify({ p: location.pathname, r: document.referrer || '' });
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon('/api/collect', new Blob([payload], { type: 'application/json' }));
+          } else {
+            fetch('/api/collect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true });
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Mermaid 다이어그램: 글에 도식이 있을 때만 로드 -->
+    <script is:inline>
+      (function () {
+        if (!document.querySelector('pre.mermaid')) return;
+        var dark = matchMedia('(prefers-color-scheme: dark)').matches;
+        var s = document.createElement('script');
+        s.type = 'module';
+        s.textContent =
+          "import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';" +
+          "mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'" +
+          (dark ? 'dark' : 'neutral') +
+          "'});mermaid.run({querySelector:'pre.mermaid'});";
+        document.body.appendChild(s);
+      })();
+    </script>
+  </body>
+</html>

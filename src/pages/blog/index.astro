@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FeaturedPost from '../../components/FeaturedPost.astro';
+import PostRow from '../../components/PostRow.astro';
+import { getPublishedPosts, getAllTags, groupByMonth, stickerColor } from '../../utils.ts';
+import { CATEGORIES } from '../../consts.ts';
+
+const posts = await getPublishedPosts();
+const tags = await getAllTags();
+const tagNames = new Set(tags.map((t) => t.tag));
+
+// 최신 글 1개는 피처, 나머지는 월별 피드
+const [featured, ...rest] = posts;
+const months = groupByMonth(rest);
+
+// 카테고리 탭: 핵심 3개 중 실제 글이 있는 것 + 나머지 태그
+const catTabs = CATEGORIES.filter((c) => tagNames.has(c));
+const otherTags = tags.filter((t) => !CATEGORIES.includes(t.tag as any));
+---
+
+<BaseLayout title="글" description="블로그 글 목록입니다.">
+  <section class="wrap container-wide">
+    <header class="page-head">
+      <h1>글</h1>
+      <p>여기에 블로그 소개 문구를 적으세요.</p>
+    </header>
+
+    {
+      posts.length === 0 ? (
+        <p class="empty">아직 발행된 글이 없습니다. 첫 글을 준비 중입니다.</p>
+      ) : (
+        <>
+          <FeaturedPost post={featured} />
+
+          <div class="list container" style="padding-inline:0">
+            <nav class="tabs" aria-label="주제별 보기">
+              <span class="tab active">전체</span>
+              {catTabs.map((c) => (
+                <a class="tab" href={`/tags/${encodeURIComponent(c)}`}>
+                  <i class="dot" style={`background:${stickerColor(c)}`} />
+                  {c}
+                </a>
+              ))}
+              {otherTags.slice(0, 6).map((t) => (
+                <a class="tab" href={`/tags/${encodeURIComponent(t.tag)}`}>
+                  {t.tag}
+                </a>
+              ))}
+            </nav>
+
+            {rest.length > 0 && (
+              <div class="feed">
+                {months.map((m) => (
+                  <section class="month">
+                    <h2 class="eyebrow">{m.label}</h2>
+                    {m.posts.map((post) => (
+                      <PostRow post={post} />
+                    ))}
+                  </section>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .wrap {
+    padding-top: 40px;
+  }
+  .page-head {
+    margin-bottom: 28px;
+  }
+  .page-head h1 {
+    font-size: 2.5rem;
+    letter-spacing: -0.033em;
+    margin-bottom: 0.25em;
+  }
+  .page-head p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  .list {
+    max-width: var(--content-width);
+    margin-inline: auto;
+    margin-top: 44px;
+  }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 4px 14px;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text-secondary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .tab:hover {
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+  .tab.active {
+    background: var(--brand);
+    color: #fff;
+    border-color: var(--brand);
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .month {
+    margin-top: 28px;
+  }
+  .month .eyebrow {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+  .empty {
+    color: var(--text-muted);
+    padding: 2rem 0;
+  }
+</style>

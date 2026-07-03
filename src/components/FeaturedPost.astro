@@ -1,0 +1,143 @@
+---
+import type { Post } from '../utils.ts';
+import { formatDate, readingTime, stickerColor } from '../utils.ts';
+import { Image } from 'astro:assets';
+
+interface Props {
+  post: Post;
+  /** 상단 라벨 (예: 최신 글) */
+  eyebrow?: string;
+}
+const { post, eyebrow = '최신 글' } = Astro.props;
+const { title, description, pubDate, tags, tldr, heroImage, heroAlt } = post.data;
+const href = `/blog/${post.id}`;
+const mins = readingTime(post.body);
+---
+
+<article class="featured">
+  <a href={href} class="wrap">
+    {
+      heroImage && (
+        <div class="media">
+          <Image src={heroImage} alt={heroAlt ?? ''} width={900} height={480} />
+        </div>
+      )
+    }
+    <div class="body">
+      <div class="meta">
+        <span class="eyebrow-label">{eyebrow}</span>
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        <span>· {mins}분</span>
+        {
+          tags[0] && (
+            <span class="cat">
+              <i class="dot" style={`background:${stickerColor(tags[0])}`} />
+              {tags[0]}
+            </span>
+          )
+        }
+      </div>
+      <h2>{title}</h2>
+      <p class="desc">{tldr ?? description}</p>
+      <span class="cta">글 읽기 →</span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .featured {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--rounded-xl);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow 0.15s ease;
+  }
+  .featured:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+  .wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-decoration: none;
+    color: inherit;
+  }
+  .wrap:hover {
+    text-decoration: none;
+  }
+  .featured:has(.media) .wrap {
+    grid-template-columns: 1.1fr 1fr;
+  }
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    object-fit: cover;
+  }
+  .body {
+    padding: 44px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6em;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 1em;
+  }
+  .eyebrow-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--brand);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    padding: 3px 10px;
+  }
+  .cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    margin: 0 0 0.5em;
+  }
+  .desc {
+    margin: 0 0 1.6em;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    max-width: 34em;
+  }
+  .cta {
+    font-weight: 500;
+    color: var(--brand);
+  }
+  @media (max-width: 760px) {
+    .featured:has(.media) .wrap {
+      grid-template-columns: 1fr;
+    }
+    .media :global(img) {
+      min-height: 200px;
+    }
+    .body {
+      padding: 28px 24px;
+    }
+  }
+</style>

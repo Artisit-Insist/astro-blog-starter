@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+.env
+.env.production
+
+# 내부 작업 산출물(배포와 무관)
+.lazyweb/
+prd.json
+
+# OMC 세션 상태(로컬 전용)
+.omc/
+
+# 로컬 Functions 시크릿
+.dev.vars

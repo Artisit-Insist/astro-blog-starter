@@ -1,0 +1,18 @@
+# 모든 검색엔진/AI 크롤러 허용
+User-agent: *
+Allow: /
+
+# 주요 AI 크롤러 명시 허용 (GEO)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+# 배포 후 실제 도메인으로 교체하세요
+Sitemap: https://your-site.pages.dev/sitemap-index.xml

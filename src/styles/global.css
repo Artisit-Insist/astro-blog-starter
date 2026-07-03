@@ -1,0 +1,339 @@
+/* ===== Fonts: Inter(라틴) + Pretendard(한글) ===== */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import url('https://rsms.me/inter/inter.css');
+
+/* =====================================================================
+   디자인 토큰 — Notion 스타일 시스템
+   · 웜 페이퍼 캔버스 위 흰 카드, 헤어라인 + 미세 레이어드 섀도
+   · 구조 액센트는 블루 단 하나(CTA·링크·활성), 나머지 색은 장식 전용
+   ===================================================================== */
+:root {
+  /* 구조 액센트 (유일한 컬러 액션) */
+  --brand: #0075de;
+  --brand-dark: #005bab;
+  --brand-soft: #e8f3fc;
+
+  /* 서피스 */
+  --bg: #f6f5f4;            /* 웜 페이퍼 캔버스 */
+  --surface: #ffffff;       /* 카드·네비·폼 */
+  --border: #e6e6e6;        /* 헤어라인 */
+  --code-bg: #f1f0ee;
+
+  /* 잉크 */
+  --text: rgba(0, 0, 0, 0.95);
+  --text-secondary: #31302e;
+  --text-muted: #615d59;
+  --text-faint: #a39e98;
+
+  /* 스티커 팔레트 — 장식(카테고리 점·일러스트) 전용, 구조에 쓰지 않음 */
+  --sticker-sky: #62aef0;
+  --sticker-purple: #d6b6f6;
+  --sticker-pink: #ff64c8;
+  --sticker-orange: #dd5b00;
+  --sticker-teal: #2a9d99;
+  --sticker-green: #1aae39;
+
+  --font-sans: 'Inter', 'Pretendard Variable', Pretendard, -apple-system,
+    system-ui, 'Segoe UI', 'Apple SD Gothic Neo', Helvetica, Arial, sans-serif;
+
+  /* 라운드 스케일 */
+  --rounded-xs: 4px;
+  --rounded-md: 8px;
+  --rounded-lg: 12px;
+  --rounded-xl: 16px;
+  --radius: 12px;
+
+  /* 레이어드 마이크로 섀도 (barely-there) */
+  --shadow: rgba(0, 0, 0, 0.01) 0 0.2px 1px, rgba(0, 0, 0, 0.02) 0 0.8px 3px,
+    rgba(0, 0, 0, 0.027) 0 2px 8px, rgba(0, 0, 0, 0.04) 0 4px 18px;
+  --shadow-elevated: rgba(0, 0, 0, 0.02) 0 1px 2px, rgba(0, 0, 0, 0.03) 0 4px 10px,
+    rgba(0, 0, 0, 0.05) 0 23px 52px;
+
+  --container: 1080px;
+  --content-width: 720px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #4da3e8;
+    --brand-dark: #2b8ad6;
+    --brand-soft: #14293b;
+    --bg: #191919;
+    --surface: #202020;
+    --border: #2f2f2f;
+    --code-bg: #262626;
+    --text: rgba(255, 255, 255, 0.92);
+    --text-secondary: #d3d1cf;
+    --text-muted: #9b9998;
+    --text-faint: #6f6d6b;
+    --shadow: rgba(0, 0, 0, 0.2) 0 1px 3px, rgba(0, 0, 0, 0.25) 0 4px 14px;
+    --shadow-elevated: rgba(0, 0, 0, 0.35) 0 8px 30px;
+  }
+}
+
+/* ===== 리셋 ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'lnum' 1;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 헤드라인: 무겁고(700) 타이트하게 — 클수록 더 촘촘한 트래킹 */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+h1 {
+  letter-spacing: -0.03em;
+}
+
+/* ===== 레이아웃: 가운데 정렬 컨테이너 ===== */
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+.container-wide {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+/* ===== 본문(글) 타이포그래피 ===== */
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--text);
+}
+.prose > * {
+  margin-block: 0;
+}
+.prose > * + * {
+  margin-top: 1.3em;
+}
+/* 헤딩 바로 다음 문단은 살짝 붙여서 소속감 있게 */
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: 0.75em;
+}
+.prose h2 {
+  margin-top: 2.4em;
+  font-size: 1.5rem;
+  line-height: 1.23;
+  letter-spacing: -0.025em;
+}
+.prose h3 {
+  margin-top: 1.9em;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+}
+.prose img {
+  border-radius: var(--rounded-lg);
+  margin-inline: auto;
+  border: 1px solid var(--border);
+}
+.prose blockquote {
+  margin-inline: 0;
+  padding: 0.6em 1.2em;
+  border-left: 3px solid var(--text);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.prose code {
+  background: var(--code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: var(--rounded-xs);
+  font-size: 0.88em;
+}
+.prose pre {
+  padding: 1.1em;
+  border-radius: var(--rounded-lg);
+  overflow-x: auto;
+  border: 1px solid var(--border);
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-block: 2.5em;
+}
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* GFM 표 */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  display: block;
+  overflow-x: auto;
+}
+.prose th,
+.prose td {
+  border: 1px solid var(--border);
+  padding: 0.55em 0.8em;
+  text-align: left;
+}
+.prose thead th {
+  background: var(--code-bg);
+  font-weight: 700;
+}
+.prose tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--code-bg) 45%, transparent);
+}
+
+/* Mermaid 다이어그램 */
+.prose pre.mermaid {
+  border: none;
+  padding: 0;
+  background: none;
+  text-align: center;
+  overflow-x: auto;
+  /* 렌더 전 원본 텍스트가 잠깐 보이지 않게 */
+  color: transparent;
+}
+.prose pre.mermaid[data-processed='true'] {
+  color: inherit;
+}
+.prose pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== 버튼 =====
+   마케팅 CTA = 필(pill), 유틸리티 = 8px — 대비는 의도적 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+.btn:hover {
+  text-decoration: none;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.65em 1.4em;
+}
+.btn-primary:hover {
+  background: var(--brand-dark);
+  color: #fff;
+}
+.btn-ghost {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 0.65em 1.4em;
+  box-shadow: var(--shadow);
+}
+.btn-ghost:hover {
+  background: var(--bg);
+}
+.btn-utility {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--rounded-md);
+  padding: 4px 14px;
+  font-size: 0.9rem;
+}
+
+/* 아이브로우(작은 라벨) */
+.eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ===== 모바일 터치 타깃 (≤600px): 44px 최소 히트 영역 ===== */
+@media (max-width: 600px) {
+  .site-header nav a {
+    padding-block: 0.65em;
+  }
+  .tab {
+    padding: 9px 16px !important;
+  }
+  .tag-pill {
+    padding: 8px 14px !important;
+  }
+  .container,
+  .container-wide {
+    padding-inline: 20px;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
