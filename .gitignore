@@ -15,3 +15,7 @@ prd.json
 
 # 로컬 Functions 시크릿
 .dev.vars
+
+# 자동화 로컬 설정·계획(커밋 금지)
+automation/.automation.env
+automation/today-plan.md
